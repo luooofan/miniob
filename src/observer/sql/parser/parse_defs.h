@@ -47,6 +47,7 @@ typedef enum
   INTS,
   FLOATS,
   DATES,
+  MAXTYPE   //新增类型须放在前面
 } AttrType;
 
 //属性值
