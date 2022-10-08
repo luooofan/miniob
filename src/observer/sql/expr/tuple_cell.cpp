@@ -34,6 +34,13 @@ void TupleCell::to_string(std::ostream &os) const
       os << data_[i];
     }
   } break;
+  case DATES: {
+    int y, m ,d;
+    y = *(int *)data_ / 10000;
+    m = (*(int *)data_ - y*10000) / 100;
+    d = *(int *)data_ - y*10000 - m*100;
+    os << y << "-" << (m<10 ? "0" : "") << m << "-" << (d<10 ? "0" : "") << d;
+  } break;
   default: {
     LOG_WARN("unsupported attr type: %d", attr_type_);
   } break;
