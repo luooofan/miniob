@@ -45,9 +45,8 @@ typedef enum
   UNDEFINED,
   CHARS,
   INTS,
-  FLOATS,
   DATES,
-  MAXTYPE   //新增类型须放在前面
+  FLOATS,
 } AttrType;
 
 //属性值
@@ -188,10 +187,10 @@ extern "C" {
 void relation_attr_init(RelAttr *relation_attr, const char *relation_name, const char *attribute_name);
 void relation_attr_destroy(RelAttr *relation_attr);
 
+int check_date(const Value value);
 void value_init_integer(Value *value, int v);
 void value_init_float(Value *value, float v);
 void value_init_string(Value *value, const char *v);
-int value_init_date(Value *value, const char *year, const char *month, const char *day);
 void value_destroy(Value *value);
 
 void condition_init(Condition *condition, CompOp comp, int left_is_attr, RelAttr *left_attr, Value *left_value,

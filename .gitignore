@@ -16,8 +16,7 @@ compile_commands.json
 GRTAGS
 GPATH
 GTAGS
-./db
-./deps
-./src/observer/.vscode/*
-./.gitignore
+/db
+/deps
+/src/observer/.vscode/*
 #*#

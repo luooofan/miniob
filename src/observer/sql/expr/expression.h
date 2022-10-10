@@ -83,7 +83,7 @@ public:
   {
     if (value.type == CHARS) {
       tuple_cell_.set_length(strlen((const char *)value.data));
-    }
+    }    
   }
 
   virtual ~ValueExpr() = default;

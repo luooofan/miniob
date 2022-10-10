@@ -101,6 +101,10 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
     }
     left = new FieldExpr(table, field);
   } else {
+    if (condition.left_value.type == DATES && 0 != check_date(condition.left_value)) {
+      LOG_ERROR("Wrong Date!");
+      return RC::SQL_SYNTAX;
+    }
     left = new ValueExpr(condition.left_value);
   }
 
@@ -115,6 +119,10 @@ RC FilterStmt::create_filter_unit(Db *db, Table *default_table, std::unordered_m
     }
     right = new FieldExpr(table, field);
   } else {
+    if (condition.right_value.type == DATES && 0 != check_date(condition.right_value)) {
+      LOG_ERROR("Wrong Date!");
+      return RC::SQL_SYNTAX;
+    }
     right = new ValueExpr(condition.right_value);
   }
 

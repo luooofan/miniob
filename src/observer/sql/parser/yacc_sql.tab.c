@@ -1704,7 +1704,7 @@ yyreduce:
 
   case 41:
 #line 283 "yacc_sql.y"
-                    { (yyval.number)=DATES; }
+                          { (yyval.number)=DATES; }
 #line 1709 "yacc_sql.tab.c"
     break;
 
@@ -1763,7 +1763,7 @@ yyreduce:
   case 48:
 #line 324 "yacc_sql.y"
          {
-		(yyvsp[0].string) = substr((yyvsp[0].string),1,strlen((yyvsp[0].string))-2);
+			(yyvsp[0].string) = substr((yyvsp[0].string),1,strlen((yyvsp[0].string))-2);
   		value_init_string(&CONTEXT->values[CONTEXT->value_length++], (yyvsp[0].string));
 		}
 #line 1770 "yacc_sql.tab.c"
@@ -1771,13 +1771,13 @@ yyreduce:
 
   case 49:
 #line 328 "yacc_sql.y"
-                  {
-		int p1 = find((yyvsp[0].string),1,"-");
-		int p2 = find((yyvsp[0].string),p1+1,"-");
-		char *y = substr((yyvsp[0].string),1,p1-1);					// year
-		char *m = substr((yyvsp[0].string),p1+1,p2-1);					// month
-		char *d = substr((yyvsp[0].string),p2+1,strlen((yyvsp[0].string))-2);			// day
-		value_init_date(&CONTEXT->values[CONTEXT->value_length++], y, m, d);
+                          {
+			int p1 = find((yyvsp[0].string),1,"-");
+			int p2 = find((yyvsp[0].string),p1+1,"-");
+			char *y = substr((yyvsp[0].string),1,p1-1);							// year
+			char *m = substr((yyvsp[0].string),p1+1,p2-1);						// month
+			char *d = substr((yyvsp[0].string),p2+1,strlen((yyvsp[0].string))-2);		// day
+			value_init_date(&CONTEXT->values[CONTEXT->value_length++], y, m, d);
 		}
 #line 1783 "yacc_sql.tab.c"
     break;
@@ -1788,7 +1788,7 @@ yyreduce:
 			CONTEXT->ssql->flag = SCF_DELETE;//"delete";
 			deletes_init_relation(&CONTEXT->ssql->sstr.deletion, (yyvsp[-2].string));
 			deletes_set_conditions(&CONTEXT->ssql->sstr.deletion, 
-					CONTEXT->conditions, CONTEXT->condition_length);
+			CONTEXT->conditions, CONTEXT->condition_length);
 			CONTEXT->condition_length = 0;	
     }
 #line 1795 "yacc_sql.tab.c"

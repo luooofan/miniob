@@ -93,7 +93,7 @@ ParserContext *get_context(yyscan_t scanner)
         INT_T
         STRING_T
         FLOAT_T
-		DATE_T
+				DATE_T
         HELP
         EXIT
         DOT //QUOTE
@@ -280,7 +280,7 @@ type:
 	INT_T { $$=INTS; }
        | STRING_T { $$=CHARS; }
        | FLOAT_T { $$=FLOATS; }
-	   | DATE_T { $$=DATES; }
+	   	 | DATE_T { $$=DATES; }
        ;
 ID_get:
 	ID 
@@ -322,16 +322,16 @@ value:
   		value_init_float(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
     |SSS {
-		$1 = substr($1,1,strlen($1)-2);
+			$1 = substr($1,1,strlen($1)-2);
   		value_init_string(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
-	|DATE_STR {
-		int p1 = find($1,1,"-");
-		int p2 = find($1,p1+1,"-");
-		char *y = substr($1,1,p1-1);					// year
-		char *m = substr($1,p1+1,p2-1);					// month
-		char *d = substr($1,p2+1,strlen($1)-2);			// day
-		value_init_date(&CONTEXT->values[CONTEXT->value_length++], y, m, d);
+		|DATE_STR {
+			int p1 = find($1,1,"-");
+			int p2 = find($1,p1+1,"-");
+			char *y = substr($1,1,p1-1);							// year
+			char *m = substr($1,p1+1,p2-1);						// month
+			char *d = substr($1,p2+1,strlen($1)-2);		// day
+			value_init_date(&CONTEXT->values[CONTEXT->value_length++], y, m, d);
 		}
     ;
     
@@ -341,7 +341,7 @@ delete:		/*  delete 语句的语法解析树*/
 			CONTEXT->ssql->flag = SCF_DELETE;//"delete";
 			deletes_init_relation(&CONTEXT->ssql->sstr.deletion, $3);
 			deletes_set_conditions(&CONTEXT->ssql->sstr.deletion, 
-					CONTEXT->conditions, CONTEXT->condition_length);
+			CONTEXT->conditions, CONTEXT->condition_length);
 			CONTEXT->condition_length = 0;	
     }
     ;
