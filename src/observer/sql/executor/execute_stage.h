@@ -17,6 +17,7 @@ See the Mulan PSL v2 for more details. */
 
 #include "common/seda/stage.h"
 #include "sql/parser/parse.h"
+#include "sql/operator/operator.h"
 #include "rc.h"
 
 class SQLStageEvent;
@@ -47,7 +48,9 @@ protected:
   RC do_select(SQLStageEvent *sql_event);
   RC do_insert(SQLStageEvent *sql_event);
   RC do_delete(SQLStageEvent *sql_event);
-
+  //add yangjk b [select tables]
+  RC do_join(SelectStmt *select_stmt, Operator**result_op);
+  //add yangjk e
 protected:
 private:
   Stage *default_storage_stage_ = nullptr;
