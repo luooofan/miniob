@@ -1,3 +1,4 @@
+include(clang_check.cmake)
 # include 另外一个cmake 配置
 #INCLUDE(file1 [OPTIONAL])
 
@@ -121,3 +122,4 @@ INSTALL(CODE "MESSAGE(\"Sample install message.\")")
 #IF(not LS_RVALUE)
 #    MESSAGE(STATUS "ls result: " ${LS_OUTPUT})
 #ENDIF(not LS_RVALUE)
+
