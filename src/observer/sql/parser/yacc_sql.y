@@ -19,11 +19,11 @@ typedef struct ParserContext {
   Value values[MAX_NUM];
   Condition conditions[MAX_NUM];
   CompOp comp;
-	char id[MAX_NUM];
+  char id[MAX_NUM];
 } ParserContext;
 
 //获取子串
-char *substr(const char *s,int n1,int n2)/*从s中提取下标为n1~n2的字符组成一个新字符串，然后返回这个新串的首地址*/
+char *substr(const char *s, int n1, int n2)/*从s中提取下标为n1~n2的字符组成一个新字符串，然后返回这个新串的首地址*/
 {
   char *sp = malloc(sizeof(char) * (n2 - n1 + 2));
   int i, j = 0;
@@ -32,6 +32,16 @@ char *substr(const char *s,int n1,int n2)/*从s中提取下标为n1~n2的字符�
   }
   sp[j] = 0;
   return sp;
+}
+
+//从字符串指定位置开始，查找指定字符第一次出现的位置
+int find(const char *s, int b, const char *t)
+{
+  int i;
+  for (i = b; i < strlen(s); i++) {
+	if (s[i] == *t)	return i;
+  }
+  return -1;
 }
 
 void yyerror(yyscan_t scanner, const char *str)
@@ -83,6 +93,7 @@ ParserContext *get_context(yyscan_t scanner)
         INT_T
         STRING_T
         FLOAT_T
+				DATE_T
         HELP
         EXIT
         DOT //QUOTE
@@ -110,7 +121,7 @@ ParserContext *get_context(yyscan_t scanner)
   char *string;
   int number;
   float floats;
-	char *position;
+  char *position;
 }
 
 %token <number> NUMBER
@@ -120,6 +131,7 @@ ParserContext *get_context(yyscan_t scanner)
 %token <string> SSS
 %token <string> STAR
 %token <string> STRING_V
+%token <string> DATE_STR
 //非终结符
 
 %type <number> type;
@@ -268,6 +280,7 @@ type:
 	INT_T { $$=INTS; }
        | STRING_T { $$=CHARS; }
        | FLOAT_T { $$=FLOATS; }
+	   	 | DATE_T { $$=DATES; }
        ;
 ID_get:
 	ID 
@@ -302,15 +315,23 @@ value_list:
 	  }
     ;
 value:
-    NUMBER{	
+    NUMBER {	
   		value_init_integer(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
-    |FLOAT{
+    |FLOAT {
   		value_init_float(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
     |SSS {
 			$1 = substr($1,1,strlen($1)-2);
   		value_init_string(&CONTEXT->values[CONTEXT->value_length++], $1);
+		}
+		|DATE_STR {
+			int p1 = find($1,1,"-");
+			int p2 = find($1,p1+1,"-");
+			char *y = substr($1,1,p1-1);							// year
+			char *m = substr($1,p1+1,p2-1);						// month
+			char *d = substr($1,p2+1,strlen($1)-2);		// day
+			value_init_date(&CONTEXT->values[CONTEXT->value_length++], y, m, d);
 		}
     ;
     
@@ -320,7 +341,7 @@ delete:		/*  delete 语句的语法解析树*/
 			CONTEXT->ssql->flag = SCF_DELETE;//"delete";
 			deletes_init_relation(&CONTEXT->ssql->sstr.deletion, $3);
 			deletes_set_conditions(&CONTEXT->ssql->sstr.deletion, 
-					CONTEXT->conditions, CONTEXT->condition_length);
+			CONTEXT->conditions, CONTEXT->condition_length);
 			CONTEXT->condition_length = 0;	
     }
     ;
