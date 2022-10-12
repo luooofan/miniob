@@ -37,4 +37,5 @@ private:
   Operator *left_ = nullptr;
   Operator *right_ = nullptr;
   JoinedTuple tuple_;
+  bool is_first_ = true;
 };
