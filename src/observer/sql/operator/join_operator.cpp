@@ -1,4 +1,3 @@
-
 //create by yangjk b [select tables]
 #include "sql/operator/join_operator.h"
 #include "storage/common/table.h"
@@ -7,30 +6,39 @@
 RC JoinOperator::open()
 {
   RC rc = RC::SUCCESS;
-  if((RC::SUCCESS != (rc = left_->open())) && (RC::SUCCESS != (rc = right_->open())))
-  {
+  if (RC::SUCCESS != (rc = left_->open())) {
     rc = RC::INTERNAL;
-    LOG_WARN("JoinOperater child open failed!");
+    LOG_WARN("JoinOperater child left open failed!");
+  }
+  if (RC::SUCCESS != (rc = right_->open())) {
+    rc = RC::INTERNAL;
+    LOG_WARN("JoinOperater child right open failed!");
   }
   Tuple * left_tuple = left_->current_tuple();
   Tuple * right_tuple = right_->current_tuple();
   tuple_.init(left_tuple, right_tuple);
+  assert(RC::SUCCESS == left_->next());
   return rc;
 }
 
 RC JoinOperator::next()
 {
-  RC rc = RC::SUCCESS;
-  if (RC::SUCCESS != (rc = left_->next())) {
-    if (RC::RECORD_EOF == rc) {
-      return RC::RECORD_EOF;
-    }
+  RC rc = right_->next();
+  if (RC::SUCCESS == rc) {
+    return rc;
   }
-  if (RC::SUCCESS != (rc = right_->next())) {
-
+  if (RC::RECORD_EOF != rc) {
+    // LOG_ERROR
+    return rc;
   }
-  // Tuple* left_tup = left_->current_tuple();
-  // Tuple* right_tup = right_->current_tuple();
+  rc = left_->next();
+  if (RC::SUCCESS == rc) {
+    assert(RC::SUCCESS == right_->close());
+    assert(RC::SUCCESS == right_->open());
+    assert(RC::SUCCESS == right_->next());
+    return rc;
+  }
+  // LOG_ERROR
   return rc;
 }
 

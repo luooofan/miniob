@@ -37,6 +37,4 @@ private:
   Operator *left_ = nullptr;
   Operator *right_ = nullptr;
   JoinedTuple tuple_;
-  std::vector<Record*> current_record_;
-  bool round_done_ = true;
 };
