@@ -45,7 +45,8 @@ typedef enum
   UNDEFINED,
   CHARS,
   INTS,
-  FLOATS
+  DATES,
+  FLOATS,
 } AttrType;
 
 //属性值
@@ -186,6 +187,7 @@ extern "C" {
 void relation_attr_init(RelAttr *relation_attr, const char *relation_name, const char *attribute_name);
 void relation_attr_destroy(RelAttr *relation_attr);
 
+int check_date(const Value value);
 void value_init_integer(Value *value, int v);
 void value_init_float(Value *value, float v);
 void value_init_string(Value *value, const char *v);
