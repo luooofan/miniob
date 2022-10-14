@@ -95,7 +95,7 @@ typedef struct {
 typedef struct {
   char *relation_name;            // Relation to update
   char *attribute_name;           // Attribute to update
-  Value value;                    // update value
+  Value value;                   // update value
   size_t condition_num;           // Length of conditions in Where clause
   Condition conditions[MAX_NUM];  // conditions in Where clause
 } Updates;

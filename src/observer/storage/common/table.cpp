@@ -605,10 +605,76 @@ RC Table::create_index(Trx *trx, const char *index_name, const char *attribute_n
   return rc;
 }
 
+// class RecordUpdater {
+// public:
+//   RecordUpdater(Table &table, Trx *trx) : table_(table), trx_(trx)
+//   {}
+
+//   RC update_record(Record *record, const Value *value, char *old_data)
+//   {
+//     RC rc = RC::SUCCESS;
+//     rc = table_.update_record(trx_, record, old_data);
+//     if (rc == RC::SUCCESS) {
+//       update_count_++;
+//     }
+//     return rc;
+//   }
+
+//   int update_count() const
+//   {
+//     return update_count_;
+//   }
+// private:
+//   Table &table_;
+//   Trx *trx_;
+//   int update_count_ = 0;
+// };
+
 RC Table::update_record(Trx *trx, const char *attribute_name, const Value *value, int condition_num,
     const Condition conditions[], int *updated_count)
 {
   return RC::GENERIC_ERROR;
+}
+
+RC Table::update_record(Trx *trx, Record *record, char *old_data, bool update_index)
+{
+  RC rc = RC::SUCCESS;
+  if (trx != nullptr) {
+    // TODO
+    LOG_WARN("not support now");
+    rc = RC::NOTFOUND;
+    // rc = trx->update_record(this, record);
+  } else {
+    if (update_index) {
+      rc = insert_entry_of_indexes(record->data(), record->rid());
+      if (rc != RC::SUCCESS) {
+        RC rc2 = delete_entry_of_indexes(record->data(), record->rid(), true);
+        if (rc2 != RC::SUCCESS) {
+          LOG_ERROR("Failed to rollback index data when insert index entries failed. table name=%s, rc=%d:%s",
+              name(),
+              rc2,
+              strrc(rc2));
+        }
+        return rc;
+      }
+    }
+
+    rc = record_handler_->update_record(record);
+    if (rc != RC::SUCCESS) {
+      LOG_ERROR("Failed to update record (rid=%d.%d). rc=%d:%s",
+                 record->rid().page_num, record->rid().slot_num, rc, strrc(rc));
+      return rc;
+    }
+
+    if (update_index) {
+      rc = delete_entry_of_indexes(old_data, record->rid(), false);
+      if (rc != RC::SUCCESS) {
+        LOG_ERROR("Failed to delete indexes of record (rid=%d.%d). rc=%d:%s",
+                  record->rid().page_num, record->rid().slot_num, rc, strrc(rc));
+      }
+    }
+  }
+  return rc;
 }
 
 class RecordDeleter {

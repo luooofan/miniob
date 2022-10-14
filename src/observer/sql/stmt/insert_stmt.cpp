@@ -58,7 +58,7 @@ RC InsertStmt::create(Db *db, const Inserts &inserts, Stmt *&stmt)
                table_name, field_meta->name(), field_type, value_type);
       return RC::SCHEMA_FIELD_TYPE_MISMATCH;
     }
-    else if (field_type == DATES && 0 != check_date(values[i])){
+    if (field_type == DATES && 0 != check_date(values[i])){
       LOG_ERROR("Wrong Date!");
       return RC::SQL_SYNTAX;
     }
