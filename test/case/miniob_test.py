@@ -58,6 +58,18 @@ python3 miniob_test.py \
         --target-dir=./miniob \
         --log=stdout \
         --compile-make-args=-j4
+        
+python3 miniob_test.py \
+        --test-case-dir=./test  \
+        --test-case-scores=case-scores.json \
+        --test-result-dir=result \
+        --test-result-tmp-dir=./result_tmp \
+        --use-unix-socket \
+        --code-type=none \
+        --db-base-dir=../../build \
+        --db-config=../../etc/observer.ini \
+        --target-dir=./miniob \
+        --log=stdout
 """
 
 
